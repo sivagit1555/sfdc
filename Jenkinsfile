@@ -73,12 +73,7 @@ node {
         try {
             deleteDir()
         }
-        catch (Exception e) {
-		currentBuild.result = "FAILED"
-		println('Unable to Clean WorkSpace.')
-		emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-		throw e       
-        }
+       
     }
     // -------------------------------------------------------------------------
     // Check out code from source control.
@@ -88,12 +83,7 @@ node {
 		try
 		{
 		   checkout scm
-		} catch (Exception e) {
-		currentBuild.result = "FAILED"
-		println('Error in checking out the code from Git repository.')
-		emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-		throw e  
-		}
+		} 
 	}
 
     // -------------------------------------------------------------------------
@@ -112,11 +102,7 @@ node {
 			
 			rc = command "${toolbelt}/sfdx auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias ${SF_USERNAME}"
 		    if (rc != 0) 
-			{
-				currentBuild.result = "FAILED"
-				emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-				error 'Salesforce org authorization failed.'
-		    }
+			
 			
 		}
 
@@ -129,66 +115,7 @@ node {
 				
                 rc = command "${toolbelt}/sfdx sfpowerkit:project:diff --revisionfrom %PreviousCommitId% --revisionto %LatestCommitId% --output ${DELTACHANGES} --apiversion ${APIVERSION} -x"
                 if (rc != 0) 
-				{
-					currentBuild.result = "FAILED"
-					emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-					error 'Unable to generate Delta changes.....'
-				} 
-				def folder = fileExists 'DeltaChanges/force-app'
-				def file = fileExists 'DeltaChanges/destructiveChanges.xml'
-    
-				if( folder && !file )
-				{
-					dir("${WORKSPACE}/${DELTACHANGES}")
-					{
-						println "Force-app folder exist, destructiveChanges.xml doesn't exist"
-						rc = command "${toolbelt}/sfdx force:source:convert -d ../${DEPLOYDIR}"
-					}
-				} 
-				else if ( !folder && file ) 
-				{
-					bat "copy manifest\\package.xml ${DELTACHANGES}"
-					println "Force-app folder doesn't exist, destructiveChanges.xml exist" 
-				}
-				else if ( folder && file ) 
-				{
-					dir("${WORKSPACE}/${DELTACHANGES}")
-					{
-						println "Force-app folder exist, destructiveChanges.xml exist"
-						if (DeploymentType=='Deploy Only')
-						{
-							println "You selected deploy only so deleting destructivechanges.xml to avoid component deletion."
-							bat "del /f destructiveChanges.xml"
-							rc = command "${toolbelt}/sfdx force:source:convert -d ../${DEPLOYDIR}"
-						}
-						else if (DeploymentType=='Delete and Deploy')
-						{
-							println "Both deletion and deployment will be performed."
-							rc = command "${toolbelt}/sfdx force:source:convert -d ../${DEPLOYDIR}"
-							bat "copy destructiveChanges.xml ..\\${DEPLOYDIR}"
-						}
-						else if (DeploymentType=='Delete Only')
-						{
-							println "You selected Delete only but force-app folder also exist. So deleting the force-app folder to avoid deployment."
-							bat "echo y | rmdir /s force-app"
-							bat "copy ..\\manifest\\package.xml ."
-						}
-						else if (DeploymentType=='Validate Only')
-                        {
-                            println "You selected Validate Only, so only validation will be performed."
-                            rc = command "${toolbelt}/sfdx force:source:convert -d ../${DEPLOYDIR}"
-                        }
-					}
-				}
-				else 
-				{
-					currentBuild.result = "FAILED"
-					emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-					error "There are no changes between the provided commit IDs that can be deployed or deleted."
-				}
 				
-               
-            }
         }
 
 
