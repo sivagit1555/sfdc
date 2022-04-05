@@ -110,13 +110,7 @@ node {
 
 		stage('Authorize to Salesforce') {
 			
-			rc = command "${toolbelt}/sfdx auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --jwtkeyfile ${server_key_file} --username ${SF_USERNAME} --setalias ${SF_USERNAME}"
-		    if (rc != 0) 
-			{
-				currentBuild.result = "FAILED"
-				emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-				error 'Salesforce org authorization failed.'
-		    }
+			sfdx force:auth:jwt:grant --clientid 3MVG9pRzvMkjMb6lfpLf0bvNKCD1Cp1WhG2ldNQAYh6BlzmPLqR4.1uappghg9n1yM63qbzNRrsg9W.eHwpPE --jwtkeyfile server.key --username cva.bobbili@nagarro.com --instanceurl https://login.salesforce.com
 			
 		}
 
