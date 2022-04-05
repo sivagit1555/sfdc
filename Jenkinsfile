@@ -1,7 +1,6 @@
 node{
 
 stage('checkout source') {
-		{
 		   checkout scm
 		}
 stage('Authorize to Salesforce'){
