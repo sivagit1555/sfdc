@@ -15,10 +15,8 @@ node {
 //	def scannerHome = tool 'SonarScanner'
 
 stage('Clean Workspace') {
-        try {
             deleteDir()
         }
-}	
 
 stage('checkout source') {
 		   checkout scm
