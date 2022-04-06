@@ -29,7 +29,7 @@ stage ('login'){
             // -------------------------------------------------------------------------
 
             stage('Authorize DevHub') {
-                rc = command "${toolbelt}/sfdx auth:jwt:grant --instanceurl "https://login.salesforce.com" --clientid "3MVG9pRzvMkjMb6lfpLf0bvNKCD1Cp1WhG2ldNQAYh6BlzmPLqR4.1uappghg9n1yM63qbzNRrsg9W.eHwpPE" --username "cva.bobbili@nagarro.com"  --jwtkeyfile "12345" --setdefaultdevhubusername --setalias HubOrg"
+                rc = command "${toolbelt}/sfdx auth:jwt:grant --instanceurl https://login.salesforce.com --clientid 3MVG9pRzvMkjMb6lfpLf0bvNKCD1Cp1WhG2ldNQAYh6BlzmPLqR4.1uappghg9n1yM63qbzNRrsg9W.eHwpPE --username cva.bobbili@nagarro.com  --jwtkeyfile 12345 --setdefaultdevhubusername --setalias HubOrg"
                 if (rc != 0) {
                     error 'Salesforce dev hub org authorization failed.'
                 }
