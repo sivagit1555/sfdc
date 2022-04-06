@@ -4,10 +4,10 @@ import groovy.json.JsonSlurperClassic
 
 node {
 
-    def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY = 3MVG9pRzvMkjMb6lfpLf0bvNKCD1Cp1WhG2ldNQAYh6BlzmPLqR4.1uappghg9n1yM63qbzNRrsg9W.eHwpPE
-    def SF_USERNAME=env.SF_USERNAME = cva.bobbili@nagarro.com
-    def SERVER_KEY_CREDENTALS_ID=env.SERVER_KEY_CREDENTALS_ID = 12345
-    def SF_INSTANCE_URL = env.SF_INSTANCE_URL = https://login.salesforce.com
+    def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY = "3MVG9pRzvMkjMb6lfpLf0bvNKCD1Cp1WhG2ldNQAYh6BlzmPLqR4.1uappghg9n1yM63qbzNRrsg9W.eHwpPE"
+    def SF_USERNAME=env.SF_USERNAME = "cva.bobbili@nagarro.com"
+    def SERVER_KEY_CREDENTALS_ID=env.SERVER_KEY_CREDENTALS_ID = "12345"
+    def SF_INSTANCE_URL = env.SF_INSTANCE_URL = "https://login.salesforce.com"
     def DELTACHANGES = 'deltachanges'
 	def DEPLOYDIR = 'toDeploy'
 	def APIVERSION = '51.0'
