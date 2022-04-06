@@ -12,63 +12,6 @@ node {
     def toolbelt = tool 'toolbelt'
 //	def scannerHome = tool 'SonarScanner'
 	
-	//----------------------------------------------------------------------
-	//Check if Previous and Latest commit IDs are provided.
-	//----------------------------------------------------------------------
-	
-	try 
-	{
-		if ((params.PreviousCommitId != '') && (params.LatestCommitId != ''))
-			println('')
-		else throw new Exception()
-			//error("Please enter both Previous and Latest commit IDs")
-	} catch (Exception e) {
-		currentBuild.result = "FAILED"
-		println('Please enter both Previous and Latest commit IDs')
-		emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-		throw e
-	}
-	
-
-	//----------------------------------------------------------------------
-	//Check if Previous and Latest commit IDs are same.
-	//----------------------------------------------------------------------
-	
-	try
-	{
-		if (params.PreviousCommitId != params.LatestCommitId)
-			println('')
-		else throw new Exception()	
-		//error("Previous and Latest Commit IDs can't be same.")
-	} catch (Exception e) {
-		currentBuild.result = "FAILED"
-		println("Commit IDs can't be same. Please run the build again and enter 2 different commit IDs.")
-		emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-		throw e
-	}
-
-	
-	//----------------------------------------------------------------------
-	//Check if Test classes are mentioned in case of RunSpecifiedTests.
-	//----------------------------------------------------------------------
-		
-	if (TESTLEVEL=='RunSpecifiedTests')
-	{
-		try
-		{
-			if (params.SpecifyTestClass != '')
-				println('')
-			else throw new Exception()	
-			//error("Please Specify Test classes.")
-		}catch (Exception e) {
-		currentBuild.result = "FAILED"
-		println("Please specify test class name in the input box.")
-		emailext (attachLog: true, body: '$PROJECT_NAME - Build # $BUILD_NUMBER - FAILED    $BUILD_URL', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS')
-		throw e
-		}
-	}
-	
-
     stage('Clean Workspace') {
         try {
             deleteDir()
